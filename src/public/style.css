@@ -1,0 +1,11 @@
+* {
+  padding: 10px;
+}
+
+.container {
+  margin: auto;
+}
+
+.clear {
+  clear: both;
+}
