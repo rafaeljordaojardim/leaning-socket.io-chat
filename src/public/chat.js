@@ -20,6 +20,14 @@
     //emits
     buttonNickName.addEventListener("click", () => {
       nickNameInput = document.getElementById("nick_name");
+      if(!nickNameInput.value) {
+        let error = document.createElement("span");
+        let nodeValue = document.createTextNode("Put an username");
+        error.appendChild(nodeValue);
+        login.appendChild(error);
+        nickNameInput.focus();
+        return;
+      }
       console.log(nickNameInput.value);
       let value = nickNameInput.value;
       nickNameInput.value = "";
@@ -30,6 +38,9 @@
 
     sendButton.addEventListener("click", () => {
       send_message = document.getElementById("send_message");
+      if(!send_message) {
+        return;
+      }
       let message = send_message.value;
       send_message.value = "";
       socket.emit("send_message", {
