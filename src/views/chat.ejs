@@ -12,22 +12,26 @@
 
 <body>
   <container class="container">
+    <div id="login-page">
       <section id="nick_name_section">
         <label for="nick_name">Name:</label>
         <input type="text" id="nick_name">
-        <button id="change_nick_name" class="btn btn-secondary">Change nick name</button>
+        <button id="change_nick_name" class="btn btn-secondary">Go chat!</button>
       </section>
-  
+    </div>
+    <div id="chat-page">
+      <span class="users"></span>
       <section>
         <textarea disabled id="messages" name="story" rows="15" cols="50">
         </textarea>
       </section>
-  
       <section id="input_message">
         <label for="send_message">Message:</label>
         <input type="text" id="send_message">
         <button id="send" class="btn btn-secondary">Send</button>
       </section>
+    </div>
+     
       <div class="clear"></div>    
   </container>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>

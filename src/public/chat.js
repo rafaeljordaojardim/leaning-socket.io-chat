@@ -1,12 +1,21 @@
 (function () {
-  const socket = io.connect("http://localhost:3000");
+    const socket = io.connect("http://localhost:3000");
 
     let nickNameInput;
     let messages = document.getElementById("messages");
     let send_message;
+    const chat = document.getElementById("chat-page");
+    const login = document.getElementById("login-page"); 
+    const container = document.getElementsByClassName("container")[0];
+    const users = document.getElementsByClassName("users")[0];
     //buttons
     let buttonNickName = document.getElementById("change_nick_name");
     let sendButton = document.getElementById("send");
+
+    window.addEventListener('load', (event) => {
+      container.removeChild(chat);
+      container.appendChild(login);
+    });
 
     //emits
     buttonNickName.addEventListener("click", () => {
@@ -14,8 +23,9 @@
       console.log(nickNameInput.value);
       let value = nickNameInput.value;
       nickNameInput.value = "";
-      socket.emit("change_user", { name: value })
-
+      socket.emit("new_user", { name: value });
+      container.removeChild(login);
+      container.appendChild(chat);
     });
 
     sendButton.addEventListener("click", () => {
@@ -40,7 +50,12 @@
 
     socket.on("disconnected", (data) => {
       messages.innerHTML += "\n" + data.message;
+      
     });
+
+    socket.on("update_users", (data) => {
+      users.innerHTML = data.users < 0 ? 0 : data.users;
+    })
 
 
 }());

@@ -2,13 +2,11 @@
 
 export default (io) => {
   io.on("connection", (socket) => {
-    socket.username = "Anonymous";
-
-    socket.broadcast.emit("userConnected", { message: `user ${socket.username} connected` });
-
-    socket.on("change_user", (user) => {
+    socket.username = "Annonymous";
+    socket.on("new_user", (user) => {
       socket.username = user.name;
       console.log(socket.username);
+      socket.broadcast.emit("userConnected", { message: `user ${user.name} connected` });
     });
 
     socket.on("send_message", (data) => {
@@ -18,9 +16,11 @@ export default (io) => {
     });
 
     socket.on('disconnect', (reason) => {
-      socket.broadcast.emit("disconnected", {
-        message: `${socket.username} was disconnected`
-      })
+      if (reason === "transport close") {
+        socket.broadcast.emit("disconnected", {
+          message: `${socket.username} was disconnected`
+        });
+      }
     });
   });
 }
