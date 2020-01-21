@@ -2,7 +2,7 @@
     const socket = io.connect("http://localhost:3000");
 
     let nickNameInput;
-    let messages = document.getElementById("messages");
+    let messages;
     let send_message;
     const chat = document.getElementById("chat-page");
     const login = document.getElementById("login-page"); 
@@ -16,12 +16,21 @@
     //functions
     //load message
     function loadMessage (data)  {
-      messages.appendChild(`<div><strong>${data.owner}: </strong>${data.message}</div>`);
+      messages = document.getElementById("messages");
+      let div = document.createElement("div");
+      let br = document.createElement("br");
+      let node = document.createTextNode(`${data.owner}: ${data.message}`);
+      div.appendChild(node);
+      messages.appendChild(div);
     }
 
     window.addEventListener('load', (event) => {
       container.removeChild(chat);
       container.appendChild(login);
+    });
+
+    window.addEventListener("beforeunload", (event) => {
+      socket.emit("disconect");
     });
 
     //emits
@@ -46,8 +55,6 @@
     sendButton.addEventListener("click", () => {
       send_message = document.getElementById("send_message");
 
-      loadMessage({owner:socket.username, message:send_message.value});
-
       if(!send_message) {
         return;
       }
@@ -65,23 +72,24 @@
       for(data of datas) {
         loadMessage(data);
       }
-    })
+    });
+
     socket.on("userConnected", (data) => {
-      messages.innerHTML += "\n" + data.message;
+      loadMessage(data);
       console.log(data.message);
     });
 
     socket.on("new_message", (data) => {
-      messages.innerHTML += "\n" + data.message;
+      loadMessage(data);
     });
 
-    socket.on("disconnected", (data) => {
-      messages.innerHTML += "\n" + data.message;
+    socket.on("disconnected", (data) => { 
+      loadMessage(data);
       
     });
 
     socket.on("update_users", (data) => {
-      users.innerHTML = data.users < 0 ? 0 : data.users;
+      loadMessage(data);
     })
 
 
