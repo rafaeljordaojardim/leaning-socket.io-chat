@@ -1,8 +1,9 @@
 
 export default (io) => {
+  const messages = [];
   io.on("connection", (socket) => {
     socket.username = "Anonymous";
-
+    socket.emit("previusMessages", messages);
     socket.broadcast.emit("userConnected", { message: `user ${socket.username} connected` });
 
     socket.on("change_user", (user) => {
@@ -11,6 +12,7 @@ export default (io) => {
     });
 
     socket.on("send_message", (data) => {
+      messages.push({owner:socket.username, message:data.message});
       io.emit("new_message", {
         message: `${socket.username}: ${data.message}`
       });
