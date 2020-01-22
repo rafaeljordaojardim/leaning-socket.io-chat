@@ -1,19 +1,20 @@
-
-
+import SocketController from "../context/v1/socket/controller";
+const socketController = new SocketController();
 export default (io) => {
   const messages = [];
   io.on("connection", (socket) => {
 
-    socket.on("new_user", (user) => {
+    socket.on("new_user", async (user) => {
       socket.username = user.name;
       // messages.push({owner: socket.username, message: ` is connected`})
-      socket.emit("previusMessages", messages); //send just to the owner socket
+      socket.emit("previusMessages", await socketController.getAllMessagesFromDb() || []); //send just to the owner socket
       console.log(socket.username);
       socket.broadcast.emit("userConnected", {owner: socket.username, message: "Connected"});
     });
 
-    socket.on("send_message", (data) => {
+    socket.on("send_message", async (data) => {
       messages.push({owner:socket.username, message:data.message});
+      await socketController.saveMessage({owner:socket.username, message: data.message})
       io.emit("new_message", {
         owner: socket.username, message: data.message
       });

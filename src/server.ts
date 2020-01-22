@@ -1,6 +1,6 @@
 import App from "./app";
 const express = require("express");
-
+import "./db/config";
 const application = new App();
 
 application.app.use(express.static(__dirname + "/public"));
