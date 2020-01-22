@@ -1,4 +1,5 @@
 import routes from "./routes";
+import routesUser from "./context/v1/socket/index";
 const express = require("express");
 
 export default class App {
@@ -12,5 +13,6 @@ export default class App {
 
   private routes() {
     this.app.use(routes);
+    this.app.use(routesUser);
   }
 }

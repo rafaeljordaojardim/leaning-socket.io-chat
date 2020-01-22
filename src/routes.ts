@@ -6,10 +6,9 @@ router.get("/", (req, res, next) => {
   res.render("chat");
 });
 
-// router.get("/messages", async (req, res, next) => {
+// router.get("/", async (req, res, next) => {
 //   const messages = await socketController.getAllMessagesFromDb();
 //   console.log(messages);
-  
 // });
 
 export default router;

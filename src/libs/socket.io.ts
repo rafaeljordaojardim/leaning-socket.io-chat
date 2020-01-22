@@ -7,25 +7,31 @@ export default (io) => {
 
     socket.on("new_user", async (user) => {
       socket.username = user.name;
-      // messages.push({owner: socket.username, message: ` is connected`})
-      socket.emit("previusMessages", await socketController.getAllMessagesFromDb() || []); //send just to the owner socket
-      console.log(socket.username);
-      clients = Object.keys(io.engine.clients).length;
-      io.emit("number_users", {users:clients});
-      socket.broadcast.emit("userConnected", {owner: socket.username, message: "Connected"});
+      const response = await socketController.veirfyUserExists(socket.username);
+      if (!response) {
+        await socketController.saveUser({connectionId: socket.id, username: socket.username});
+      }else {
+        await socketController.updateUser({connectionId: socket.id, username: socket.username});
+      }
+        // socket.emit("previusMessages", await socketController.getAllMessagesFromDb() || []); //send just to the owner socket
+        console.log(socket.username);
+        clients = Object.keys(io.engine.clients).length;
+        io.emit("number_users", { users: clients });
+        socket.broadcast.emit("userConnected", { owner: socket.username, message: "Connected" });
     });
 
     socket.on("send_message", async (data) => {
-      messages.push({owner:socket.username, message:data.message});
-      await socketController.saveMessage({owner:socket.username, message: data.message})
+      messages.push({ owner: socket.username, message: data.message });
+      await socketController.saveMessage({ owner: socket.username, message: data.message })
       io.emit("new_message", {
         owner: socket.username, message: data.message
       });
     });
 
-    socket.on('disconnect', (reason) => {
+    socket.on('disconnect', async (reason) => {
       clients = Object.keys(io.engine.clients).length;
-      io.emit("number_users", {users:clients});
+      const response = await socketController.disconect(socket.username);
+      io.emit("number_users", { users: clients });
       if (reason === "transport close") {
         // messages.push({owner: socket.username, message: ` was disconnected`});
         socket.broadcast.emit("disconnected", {
