@@ -18,10 +18,14 @@
     function loadMessage (data)  {
       messages = document.getElementById("messages");
       let div = document.createElement("div");
-      let br = document.createElement("br");
       let node = document.createTextNode(`${data.owner}: ${data.message}`);
       div.appendChild(node);
       messages.appendChild(div);
+    }
+  
+    //update users
+    function updateNumberUsers(number) {
+      users.innerHTML = `Users connected ${number}`;
     }
 
     window.addEventListener('load', (event) => {
@@ -90,7 +94,13 @@
 
     socket.on("update_users", (data) => {
       loadMessage(data);
-    })
+    });
+
+    socket.on("number_users", (data) => {
+      console.log(data);
+      
+      updateNumberUsers(data.users);
+    });
 
 
 }());

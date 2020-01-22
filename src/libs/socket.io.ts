@@ -3,12 +3,15 @@ const socketController = new SocketController();
 export default (io) => {
   const messages = [];
   io.on("connection", (socket) => {
+    let clients = 0;
 
     socket.on("new_user", async (user) => {
       socket.username = user.name;
       // messages.push({owner: socket.username, message: ` is connected`})
       socket.emit("previusMessages", await socketController.getAllMessagesFromDb() || []); //send just to the owner socket
       console.log(socket.username);
+      clients = Object.keys(io.engine.clients).length;
+      io.emit("number_users", {users:clients});
       socket.broadcast.emit("userConnected", {owner: socket.username, message: "Connected"});
     });
 
@@ -21,6 +24,8 @@ export default (io) => {
     });
 
     socket.on('disconnect', (reason) => {
+      clients = Object.keys(io.engine.clients).length;
+      io.emit("number_users", {users:clients});
       if (reason === "transport close") {
         // messages.push({owner: socket.username, message: ` was disconnected`});
         socket.broadcast.emit("disconnected", {
