@@ -18,7 +18,7 @@ export default (io) => {
         clients = Object.keys(io.engine.clients).length;
         io.emit("number_users", { users: clients });
         // socket.broadcast.emit("userConnected", { owner: socket.username, message: "Connected" });
-        let onlineUsers = await socketController.getOnlineUsers(socket.username);
+        let onlineUsers = await socketController.getOnlineUsers();
         io.emit("list-online-users", onlineUsers);
     });
 

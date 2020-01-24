@@ -30,7 +30,7 @@ export default class SocketReposity {
     return User.update({username}, {connectionId: null});
   }
 
-  getOnlineUsers(username) {
+  getOnlineUsers() {
     return User.find({"connectionId": {$ne: null}});;
   }
 }

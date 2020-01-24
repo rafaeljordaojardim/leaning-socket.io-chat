@@ -21,7 +21,7 @@ export default class UserUseCase {
     return this.socketRepository.updateUser(user)
   }
 
-  getOnlineUsers(username) {
-    return this.socketRepository.getOnlineUsers(username);
+  getOnlineUsers() {
+    return this.socketRepository.getOnlineUsers();
   }
 }

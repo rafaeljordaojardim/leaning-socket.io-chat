@@ -35,7 +35,7 @@ export default class Socket {
     return this.userUseCase.disconect(username);
   }
 
-  getOnlineUsers(username) {
-    return this.userUseCase.getOnlineUsers(username);
+  getOnlineUsers() {
+    return this.userUseCase.getOnlineUsers();
   }
 } 
