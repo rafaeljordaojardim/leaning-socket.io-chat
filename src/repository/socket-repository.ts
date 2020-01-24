@@ -31,6 +31,6 @@ export default class SocketReposity {
   }
 
   getOnlineUsers(username) {
-    return User.find({ "username":{$ne: `${username}`}}).where('connectionId').equals(null);
+    return User.find({"connectionId": {$ne: null}});;
   }
 }

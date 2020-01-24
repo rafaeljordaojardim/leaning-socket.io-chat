@@ -36,10 +36,10 @@
     function loadListOnlineUsers(listOnlineUsers) {
       if(listOnlineUsers) {
         for(onlineUser of listOnlineUsers) {
-          let option = document.createElement("option");
-          option.setAttribute("value", onlineUser.connectionId);
-          option.innerHTML = onlineUser.username;
-          selector.append(option);
+            let option = document.createElement("option");
+            option.setAttribute("value", onlineUser.connectionId);
+            option.innerHTML = onlineUser.username;
+            selector.append(option);
         }
       }
     }
@@ -121,6 +121,7 @@
 
     socket.on("list-online-users", (listOnlineUsers) => {
       console.log("listOnlineUser", listOnlineUsers);
+      console.log(socket.username);
       
       loadListOnlineUsers(listOnlineUsers);
     });
