@@ -29,4 +29,8 @@ export default class SocketReposity {
   public disconect (username) {
     return User.update({username}, {connectionId: null});
   }
+
+  getOnlineUsers(username) {
+    return User.find({ "username":{$ne: `${username}`}}).where('connectionId').equals(null);
+  }
 }

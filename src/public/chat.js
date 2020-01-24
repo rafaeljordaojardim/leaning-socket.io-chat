@@ -8,9 +8,11 @@
     const login = document.getElementById("login-page"); 
     const container = document.getElementsByClassName("container")[0];
     const users = document.getElementsByClassName("users")[0];
+    const divSelector = document.getElementById("choose-conversation");
     //buttons
     let buttonNickName = document.getElementById("change_nick_name");
     let sendButton = document.getElementById("send");
+    let selector = document.getElementById("select-user");
 
 
     //functions
@@ -27,9 +29,24 @@
     function updateNumberUsers(number) {
       users.innerHTML = `Users connected ${number}`;
     }
+    selector.addEventListener("change", e =>  {
+      console.log(selector.options[selector.selectedIndex].value);
+    })
+    //load online users
+    function loadListOnlineUsers(listOnlineUsers) {
+      if(listOnlineUsers) {
+        for(onlineUser of listOnlineUsers) {
+          let option = document.createElement("option");
+          option.setAttribute("value", onlineUser.connectionId);
+          option.innerHTML = onlineUser.username;
+          selector.append(option);
+        }
+      }
+    }
 
     window.addEventListener('load', (event) => {
       container.removeChild(chat);
+      container.removeChild(divSelector);
       container.appendChild(login);
     });
 
@@ -53,7 +70,7 @@
       nickNameInput.value = "";
       socket.emit("new_user", { name: value });
       container.removeChild(login);
-      container.appendChild(chat);
+      container.appendChild(divSelector);
     });
 
     sendButton.addEventListener("click", () => {
@@ -100,6 +117,12 @@
       console.log(data);
       
       updateNumberUsers(data.users);
+    });
+
+    socket.on("list-online-users", (listOnlineUsers) => {
+      console.log("listOnlineUser", listOnlineUsers);
+      
+      loadListOnlineUsers(listOnlineUsers);
     });
 
 
